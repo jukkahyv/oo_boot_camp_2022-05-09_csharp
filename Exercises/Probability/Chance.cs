@@ -5,26 +5,38 @@
  */
 
 using Exercises.Probability;
+using ExtensionMethods.Probability;
 
 namespace Exercises.Probability {
     // Understands the likelihood of something specific occurring
     public class Chance {
+        private const double EPSILON = 1e-10;
         private const double CERTAIN_FRACTION = 1.0;
         private readonly double _fraction;
 
         public Chance(double likelihoodAsFraction) {
+            if (likelihoodAsFraction is < 0.0 or > 1.0)
+                throw new ArgumentException("Value must be between 0.0 and 1.0, inclusive");
             _fraction = likelihoodAsFraction;
         }
 
         public override bool Equals(object? o) => this == o || o is Chance other && this.Equals(other);
 
-        private bool Equals(Chance other) => this._fraction == other._fraction;
+        private bool Equals(Chance other) => Math.Abs(this._fraction - other._fraction) < EPSILON;
 
-        public override int GetHashCode() => _fraction.GetHashCode();
+        public override int GetHashCode() => Math.Round(_fraction/EPSILON).GetHashCode();
 
         public Chance Not() => new Chance(CERTAIN_FRACTION - _fraction);
 
         public static Chance operator !(Chance c) => c.Not();
+
+        public Chance And(Chance other) => (this._fraction * other._fraction).Chance();
+
+        public static Chance operator &(Chance left, Chance right) => left.And(right);
+
+        public Chance Or(Chance other) => !(!this & !other);
+
+        public static Chance operator |(Chance left, Chance right) => left.Or(right);
     }
 }
 

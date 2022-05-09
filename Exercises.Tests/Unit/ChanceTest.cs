@@ -4,6 +4,7 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using System;
 using System.Collections.Generic;
 using Exercises.Probability;
 using ExtensionMethods.Probability;
@@ -36,6 +37,7 @@ namespace Exercises.Tests.Unit {
         [Fact]
         public void Hash() {
             Assert.Equal(0.75.Chance().GetHashCode(), Likely.GetHashCode());
+            Assert.Equal(0.3.Chance().GetHashCode(), (!!0.3.Chance()).GetHashCode());
         }
 
         [Fact]
@@ -46,6 +48,32 @@ namespace Exercises.Tests.Unit {
             Assert.Equal(Likely, Likely.Not().Not());
             Assert.Equal(Impossible, !Certain);
             Assert.Equal(Certain, !Impossible);
+            Assert.Equal(0.3.Chance(), !!0.3.Chance());
+        }
+        [Fact]
+        public void And()
+        {
+            Assert.Equal(Unlikely, EquallyLikely & EquallyLikely);
+            Assert.Equal(0.1875.Chance(), Likely & Unlikely);
+            Assert.Equal(Unlikely.And(Likely), Likely & Unlikely);
+            Assert.Equal(Likely, Likely & Certain);
+            Assert.Equal(Impossible, Impossible & Likely);
+        }
+        
+        [Fact]
+        public void Or()
+        {
+            Assert.Equal(Likely, EquallyLikely | EquallyLikely);
+            Assert.Equal(new Chance(0.8125), Likely | Unlikely);
+            Assert.Equal(Unlikely.Or(Likely), Likely | Unlikely);
+            Assert.Equal(Certain, Likely | Certain);
+            Assert.Equal(Likely, Impossible | Likely);
+        }
+
+        [Fact]
+        public void InvalidFractions() {
+            Assert.Throws<ArgumentException>(() => (-0.1).Chance());
+            Assert.Throws<ArgumentException>(() => 1.1.Chance());
         }
     }
 }
