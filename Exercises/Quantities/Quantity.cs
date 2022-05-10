@@ -18,8 +18,10 @@ namespace Exercises.Quantities {
         public override bool Equals(object? o) =>
             this == o || o is Quantity other && this.Equals(other);
 
-        private bool Equals(Quantity other) => this._amount == other._amount && this._unit == other._unit;
+        private bool Equals(Quantity other) => this._amount == ConvertedAmount(other);
 
-        public override int GetHashCode() => _amount.GetHashCode() * 37 + _unit.GetHashCode();
+        private double ConvertedAmount(Quantity other) => this._unit.ConvertedAmount(other._amount, other._unit);
+
+        public override int GetHashCode() => _unit.HashCode(_amount);
     }
 }

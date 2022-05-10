@@ -23,7 +23,9 @@ namespace Exercises.Tests.Unit {
 
         [Fact]
         public void EqualityOfDifferentUnits() {
-            Assert.NotEqual(8.0.Tablespoons(), 8.Pints());
+            Assert.Equal(8.Tablespoons(), 0.5.Cups());
+            Assert.Equal(768.Teaspoons(), 1.Gallons());
+            Assert.NotEqual(8.Tablespoons(), 8.Pints());
         }
 
         [Fact]
@@ -35,6 +37,7 @@ namespace Exercises.Tests.Unit {
         [Fact]
         public void Hash() {
             Assert.Equal(8.0.Tablespoons().GetHashCode(), 8.0.Tablespoons().GetHashCode());
+            Assert.Equal(8.Tablespoons().GetHashCode(), 0.5.Cups().GetHashCode());
         }
     }
 }

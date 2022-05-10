@@ -26,6 +26,11 @@ namespace Exercises.Quantities {
         private Unit(double relativeRatio, Unit relativeUnit) {
             _baseUnitRatio = relativeRatio * relativeUnit._baseUnitRatio;
         }
+
+        internal double ConvertedAmount(double otherAmount, Unit other) =>
+            otherAmount * other._baseUnitRatio / this._baseUnitRatio;
+
+        internal int HashCode(double amount) => (amount * _baseUnitRatio).GetHashCode();
     }
 }
 

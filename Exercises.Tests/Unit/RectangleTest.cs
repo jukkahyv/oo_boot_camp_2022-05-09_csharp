@@ -8,7 +8,7 @@ using System;
 using Exercises.rectangle;
 using Xunit;
 
-namespace Exercises.Tests.unit {
+namespace Exercises.Tests.Unit {
 
     // Ensures that Rectangle works correctly
     public class RectangleTest
