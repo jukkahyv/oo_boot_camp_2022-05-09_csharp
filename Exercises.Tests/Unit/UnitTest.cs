@@ -13,14 +13,27 @@ namespace Exercises.Tests.UnitTests
 
         [Fact] public void Equality()
         {
-            Assert.Equal(new Quantity(1, Unit.Tablespoon), new Quantity(3, Unit.Teaspoon));
-            Assert.Equal(new Quantity(2, Unit.Tablespoon), new Quantity(6, Unit.Teaspoon));
-            Assert.NotEqual(new Quantity(3, Unit.Tablespoon), new Quantity(2, Unit.Teaspoon));
-            Assert.Equal(new Quantity(1, Unit.Gallon), new Quantity(4, Unit.Quart));
-            Assert.Equal(new Quantity(1, Unit.Pint), new Quantity(96, Unit.Teaspoon));
-            Assert.NotEqual(new Quantity(1, Unit.Pint), new Quantity(95, Unit.Teaspoon));
             Assert.Equal(1d.Tablespoons(), 3d.Teaspoons());
+            Assert.Equal(2d.Tablespoons(), 6d.Teaspoons());
+            Assert.NotEqual(3d.Tablespoons(), 2d.Teaspoons());
+            Assert.Equal(1d.Gallons(), 4d.Quarts());
+            Assert.Equal(1d.Pints(), 96d.Teaspoons());
+            Assert.NotEqual(1d.Pints(), 95d.Teaspoons());
+            Assert.Equal(1d.Tablespoons(), 3d.Teaspoons());
+            Assert.Equal(1d.Pints(), 16d.Ounces());
+
             Assert.Equal(0.5.Pints(), 1d.Cups());
+            Assert.Equal(0.5.Pints().GetHashCode(), 1d.Cups().GetHashCode());
+        }
+
+        [Fact]
+        public void Add()
+        {
+            Assert.Equal(4d.Teaspoons(), 1d.Tablespoons() + 1d.Teaspoons());
+            Assert.Equal(2d.Tablespoons(), 1d.Tablespoons() + 1d.Tablespoons());
+            Assert.Equal(6d.Teaspoons(), 1d.Tablespoons() + 1d.Tablespoons());
+            Assert.Equal(17d.Ounces(), 1d.Ounces() + 1d.Pints());
+            Assert.NotEqual(16d.Ounces(), 1d.Ounces() + 1d.Pints());
         }
 
     }

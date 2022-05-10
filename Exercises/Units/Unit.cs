@@ -4,42 +4,42 @@ namespace Exercises.Units
     public class Unit
     {
 
-        private readonly int _factor;
-        private readonly Unit? _referenceUnit;
+        private readonly double _baseUnitRatio;
 
         private Unit()
         {
-            _factor = 1;
+            _baseUnitRatio = 1;
         }
 
-        private Unit(Unit? referenceUnit, int factor)
+        private Unit(Unit relativeUnit, double relativeRatio)
         {
-            _referenceUnit = referenceUnit;
-            _factor = factor;
+            _baseUnitRatio = relativeUnit._baseUnitRatio * relativeRatio;
         }
 
-        internal double GetReferenceUnits(double amount)
+        public override string ToString() => $"{_baseUnitRatio} teaspoons";
+
+        internal double ConvertedAmount(double otherAmount, Unit other)
         {
-            if (_referenceUnit == null)
-            {
-                return amount;
-            } else
-            {
-                return _factor * _referenceUnit.GetReferenceUnits(amount);
-            }
+            return otherAmount * other._baseUnitRatio / this._baseUnitRatio;
         }
 
-        public override string ToString() 
-            => $"{GetReferenceUnits(_factor)} reference units";
+        internal int GetHashCode(double amount)
+        {
+            return (amount * _baseUnitRatio).GetHashCode();
+        }
 
-        private static Unit RefenceUnit = new Unit();
-        public static Unit Teaspoon = new Unit(RefenceUnit, 1);
-        public static Unit Tablespoon = new Unit(Teaspoon, 3);
-        public static Unit Ounce = new Unit(Tablespoon, 2);
-        public static Unit Cup = new Unit(Ounce, 8);
-        public static Unit Pint = new Unit(Cup, 2);
-        public static Unit Quart = new Unit(Pint, 2);
-        public static Unit Gallon = new Unit(Quart, 4);
+        public double Add(double leftAmount, double rightAmount, Unit other)
+        {
+            return ConvertedAmount(leftAmount + rightAmount, other);
+        }
+
+        public readonly static Unit Teaspoon = new();
+        public readonly static Unit Tablespoon = new(Teaspoon, 3);
+        public readonly static Unit Ounce = new(Tablespoon, 2);
+        public readonly static Unit Cup = new(Ounce, 8);
+        public readonly static Unit Pint = new(Cup, 2);
+        public readonly static Unit Quart = new(Pint, 2);
+        public readonly static Unit Gallon = new(Quart, 4);
 
     }
 
