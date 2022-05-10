@@ -39,5 +39,12 @@ namespace Exercises.Tests.Unit {
             Assert.Equal(8.0.Tablespoons().GetHashCode(), 8.0.Tablespoons().GetHashCode());
             Assert.Equal(8.Tablespoons().GetHashCode(), 0.5.Cups().GetHashCode());
         }
+        
+        [Fact]
+        public void Arithmetic() {
+            Assert.Equal(0.5.Quarts(), 6.Tablespoons() + 13.Ounces());
+            Assert.Equal(-6.Tablespoons(), -6.Tablespoons());
+            Assert.Equal(-0.5.Pints(), 10.Tablespoons() - 13.Ounces());
+        }
     }
 }
