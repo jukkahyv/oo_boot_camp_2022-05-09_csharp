@@ -10,7 +10,8 @@ using Exercises.Probability;
 using ExtensionMethods.Probability;
 using Xunit;
 
-namespace Exercises.Tests.Unit {
+namespace Exercises.Tests.UnitTests
+{
 
 // Ensures that Chance operates correctly
     public class ChanceTest {
