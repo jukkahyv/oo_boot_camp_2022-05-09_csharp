@@ -44,6 +44,7 @@ namespace Exercises.Tests.Unit {
             Assert.Equal(8.0.Tablespoons().GetHashCode(), 8.0.Tablespoons().GetHashCode());
             Assert.Equal(8.Tablespoons().GetHashCode(), 0.5.Cups().GetHashCode());
             Assert.Equal(18.Inches().GetHashCode(), 0.5.Yards().GetHashCode());
+            Assert.Equal(10.Celsius().GetHashCode(), 50.Fahrenheit().GetHashCode());
         }
         
         [Fact]
@@ -63,6 +64,19 @@ namespace Exercises.Tests.Unit {
         [Fact]
         public void CrossUnitArithmetic() {
             Assert.Throws<ArgumentException>(() => 3.Yards() - 4.Tablespoons());
+        }
+
+        [Fact]
+        public void TemperatureEquality() {
+            AssertBidirectionalEquality(0.Celsius(), 32.Fahrenheit());
+            AssertBidirectionalEquality(10.Celsius(), 50.Fahrenheit());
+            AssertBidirectionalEquality(100.Celsius(), 212.Fahrenheit());
+            AssertBidirectionalEquality((-40).Celsius(), (-40).Fahrenheit());
+        }
+
+        private void AssertBidirectionalEquality(Quantity left, Quantity right) {
+            Assert.Equal(left, right);
+            Assert.Equal(right, left);
         }
     }
 }

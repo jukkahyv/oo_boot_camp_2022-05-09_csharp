@@ -26,25 +26,33 @@ namespace Exercises.Quantities {
         public static readonly Unit Mile = new Unit(8, Furlong);
         public static readonly Unit League = new Unit(3, Mile);
 
+        public static readonly Unit Celsius = new Unit();
+        public static readonly Unit Fahrenheit = new Unit(5 / 9.0, 32, Celsius);
+
         private readonly Unit _baseUnit;
         private readonly double _baseUnitRatio;
+        private readonly double _offset;
 
         private Unit() {
             _baseUnit = this;
             _baseUnitRatio = 1.0;
+            _offset = 0.0;
         }
 
-        private Unit(double relativeRatio, Unit relativeUnit) {
+        private Unit(double relativeRatio, Unit relativeUnit) : this(relativeRatio, 0.0, relativeUnit) { }
+
+        private Unit(double relativeRatio, double offset, Unit relativeUnit) {
             _baseUnit = relativeUnit._baseUnit;
             _baseUnitRatio = relativeRatio * relativeUnit._baseUnitRatio;
+            _offset = offset;
         }
 
         internal double ConvertedAmount(double otherAmount, Unit other) {
             if (!this.IsCompatible(other)) throw new ArgumentException("Incompatible Units");
-            return otherAmount * other._baseUnitRatio / this._baseUnitRatio;
+            return (otherAmount - other._offset) * other._baseUnitRatio / this._baseUnitRatio + this._offset;
         }
 
-        internal int HashCode(double amount) => (amount * _baseUnitRatio).GetHashCode();
+        internal int HashCode(double amount) => ((amount - _offset) * _baseUnitRatio).GetHashCode();
 
         internal bool IsCompatible(Unit other) => this._baseUnit == other._baseUnit;
     }
@@ -84,5 +92,9 @@ namespace ExtensionMethods.Probability.Quantities {
         public static Quantity Leagues(this double amount) => new Quantity(amount, Unit.League);
         public static Quantity Leagues(this int amount) => new Quantity(amount, Unit.League);
 
+        public static Quantity Celsius(this double amount) => new Quantity(amount, Unit.Celsius);
+        public static Quantity Celsius(this int amount) => new Quantity(amount, Unit.Celsius);
+        public static Quantity Fahrenheit(this double amount) => new Quantity(amount, Unit.Fahrenheit);
+        public static Quantity Fahrenheit(this int amount) => new Quantity(amount, Unit.Fahrenheit);
     }
 }
