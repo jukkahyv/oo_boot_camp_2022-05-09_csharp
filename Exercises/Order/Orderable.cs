@@ -12,12 +12,8 @@ namespace Exercises.Order {
 
     // Understands operations on sequences
     public static class OrderExtensions {
-        public static T Best<T>(this List<T> challengers) where T : Orderable<T> {
-            var champion = challengers.First();
-            foreach (var challenger in challengers) {
-                if (challenger.IsBetterThan(champion)) champion = challenger;
-            }
-            return champion;
-        }
+        public static T Best<T>(this List<T> elements) where T : Orderable<T> =>
+            elements.Aggregate(elements.First(),
+                (current, challenger) => challenger.IsBetterThan(current) ? challenger : current);
     }
 }
