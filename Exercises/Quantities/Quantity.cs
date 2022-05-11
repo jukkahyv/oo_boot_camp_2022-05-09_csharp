@@ -18,7 +18,9 @@ namespace Exercises.Quantities {
         public override bool Equals(object? o) =>
             this == o || o is Quantity other && this.Equals(other);
 
-        private bool Equals(Quantity other) => this._amount == ConvertedAmount(other);
+        private bool Equals(Quantity other) => this.IsCompatible(other) && this._amount == ConvertedAmount(other);
+
+        private bool IsCompatible(Quantity other) => this._unit.IsCompatible(other._unit);
 
         private double ConvertedAmount(Quantity other) => this._unit.ConvertedAmount(other._amount, other._unit);
 

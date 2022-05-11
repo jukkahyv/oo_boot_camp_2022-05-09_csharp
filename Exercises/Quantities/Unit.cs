@@ -26,24 +26,29 @@ namespace Exercises.Quantities {
         public static readonly Unit Mile = new Unit(8, Furlong);
         public static readonly Unit League = new Unit(3, Mile);
 
+        private readonly Unit _baseUnit;
         private readonly double _baseUnitRatio;
 
         private Unit() {
+            _baseUnit = this;
             _baseUnitRatio = 1.0;
         }
 
         private Unit(double relativeRatio, Unit relativeUnit) {
+            _baseUnit = relativeUnit._baseUnit;
             _baseUnitRatio = relativeRatio * relativeUnit._baseUnitRatio;
         }
 
-        internal double ConvertedAmount(double otherAmount, Unit other) =>
-            otherAmount * other._baseUnitRatio / this._baseUnitRatio;
+        internal double ConvertedAmount(double otherAmount, Unit other) {
+            if (!this.IsCompatible(other)) throw new ArgumentException("Incompatible Units");
+            return otherAmount * other._baseUnitRatio / this._baseUnitRatio;
+        }
 
         internal int HashCode(double amount) => (amount * _baseUnitRatio).GetHashCode();
+
+        internal bool IsCompatible(Unit other) => this._baseUnit == other._baseUnit;
     }
 }
-
-
 
 namespace ExtensionMethods.Probability.Quantities {
     public static class QuantityConstructors {
