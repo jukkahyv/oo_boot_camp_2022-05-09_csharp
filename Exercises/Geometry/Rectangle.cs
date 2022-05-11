@@ -19,6 +19,8 @@ namespace Exercises.rectangle {
             _width = width;
         }
 
+        public static Rectangle Square(double side) => new Rectangle(side, side);
+
         public double Area() => _length * _width;
 
         public double Perimeter() => 2 * (_length + _width);
