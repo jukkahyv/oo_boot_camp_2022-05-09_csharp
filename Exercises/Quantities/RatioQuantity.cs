@@ -4,9 +4,11 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using Exercises.Order;
+
 namespace Exercises.Quantities {
     // Understands a specific measurement
-    public class RatioQuantity : IntervalQuantity {
+    public class RatioQuantity : IntervalQuantity, Orderable<RatioQuantity> {
 
         internal RatioQuantity(double amount, Unit unit) : base(amount, unit) { }
 
@@ -16,5 +18,7 @@ namespace Exercises.Quantities {
             new(left._amount + left.ConvertedAmount(right), left._unit);
 
         public static RatioQuantity operator -(RatioQuantity left, RatioQuantity right) => left + -right;
+        
+        public bool IsBetterThan(RatioQuantity other) => base.IsBetterThan(other);
     }
 }

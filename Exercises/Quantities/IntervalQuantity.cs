@@ -4,9 +4,11 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using Exercises.Order;
+
 namespace Exercises.Quantities {
     // Understands a specific measurement
-    public class IntervalQuantity {
+    public class IntervalQuantity : Orderable<IntervalQuantity> {
         protected readonly double _amount;
         protected readonly Unit _unit;
 
@@ -14,6 +16,8 @@ namespace Exercises.Quantities {
             _amount = amount;
             _unit = unit;
         }
+
+        public bool IsBetterThan(IntervalQuantity other) => this._amount > ConvertedAmount(other);
 
         public override bool Equals(object? o) =>
             this == o || o is IntervalQuantity other && this.Equals(other);
