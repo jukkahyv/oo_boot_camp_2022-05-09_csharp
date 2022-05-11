@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using Exercises.Order;
+using Exercises.Probability;
 using Exercises.rectangle;
+using ExtensionMethods.Probability;
 using Xunit;
 
 namespace Exercises.Tests.unit {
@@ -23,6 +25,17 @@ namespace Exercises.Tests.unit {
                 Rectangle.Square(3)
             }.Best().Area());
             Assert.Throws<InvalidOperationException>(() => new List<Rectangle>().Best());
+        }
+
+        [Fact]
+        public void LeastLikelyChance() {
+            Assert.Equal(0.1.Chance(), new List<Chance> {
+                0.25.Chance(),
+                1.Chance(),
+                0.1.Chance(),
+                0.5.Chance()
+            }.Best());
+            Assert.Throws<InvalidOperationException>(() => new List<Chance>().Best());
         }
     }
 }

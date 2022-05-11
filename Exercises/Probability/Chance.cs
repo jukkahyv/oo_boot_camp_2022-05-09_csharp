@@ -4,12 +4,13 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using Exercises.Order;
 using Exercises.Probability;
 using ExtensionMethods.Probability;
 
 namespace Exercises.Probability {
     // Understands the likelihood of something specific occurring
-    public class Chance {
+    public class Chance : Orderable<Chance> {
         private const double EPSILON = 1e-10;
         private const double CERTAIN_FRACTION = 1.0;
         private readonly double _fraction;
@@ -19,6 +20,8 @@ namespace Exercises.Probability {
                 throw new ArgumentException("Value must be between 0.0 and 1.0, inclusive");
             _fraction = likelihoodAsFraction;
         }
+
+        public bool IsBetterThan(Chance other) => this._fraction < other._fraction;
 
         public override bool Equals(object? o) => this == o || o is Chance other && this.Equals(other);
 
