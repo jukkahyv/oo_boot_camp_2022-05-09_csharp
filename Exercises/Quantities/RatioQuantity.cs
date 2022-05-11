@@ -12,10 +12,10 @@ namespace Exercises.Quantities {
 
         internal RatioQuantity(double amount, Unit unit) : base(amount, unit) { }
 
-        public static RatioQuantity operator -(RatioQuantity q) => new(-q._amount, q._unit);
+        public static RatioQuantity operator -(RatioQuantity q) => new(-q.Amount, q.Unit);
 
         public static RatioQuantity operator +(RatioQuantity left, RatioQuantity right) =>
-            new(left._amount + left.ConvertedAmount(right), left._unit);
+            new(left.Amount + left.ConvertedAmount(right), left.Unit);
 
         public static RatioQuantity operator -(RatioQuantity left, RatioQuantity right) => left + -right;
         
