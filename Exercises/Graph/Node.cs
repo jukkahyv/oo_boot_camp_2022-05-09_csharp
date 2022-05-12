@@ -18,10 +18,22 @@ namespace Exercises.Graph {
             return (int)result;
         }
 
+        public double Cost(Node destination) {
+            var result = Cost(destination, NoVisitedNodes);
+            if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
+            return result;
+        }
+
         internal double HopCount(Node destination, List<Node> visitedNodes) {
             if (this == destination) return 0;
             if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
             return _links.Min((link) => link.HopCount(destination, CopyWithThis(visitedNodes)));
+        }
+
+        internal double Cost(Node destination, List<Node> visitedNodes) {
+            if (this == destination) return 0;
+            if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
+            return _links.Min((link) => link.Cost(destination, CopyWithThis(visitedNodes)));
         }
 
         private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
