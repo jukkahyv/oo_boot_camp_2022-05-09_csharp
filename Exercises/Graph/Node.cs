@@ -15,7 +15,7 @@ namespace Exercises.Graph {
             return neighbor;
         }
 
-        public bool CanReach(Node destination) => CanReach(destination, NoVisitedNodes());
+        public bool CanReach(Node destination) => HopCount(destination, NoVisitedNodes()) != UNREACHABLE;
 
         public int HopCount(Node destination) {
             var result = HopCount(destination, NoVisitedNodes());
@@ -27,18 +27,13 @@ namespace Exercises.Graph {
             if (this == destination) return 0;
             if (visitedNodes.Contains(this)) return UNREACHABLE;
             visitedNodes.Add((this));
+            var champion = UNREACHABLE;
             foreach (var n in _neighbors) {
                 var neighborHopCount = n.HopCount(destination, visitedNodes);
-                if (neighborHopCount != UNREACHABLE) return neighborHopCount + 1;
+                if (neighborHopCount == UNREACHABLE) continue;
+                if (champion == UNREACHABLE || neighborHopCount + 1 < champion) champion = neighborHopCount + 1;
             }
-            return UNREACHABLE;
-        }
-
-        private bool CanReach(Node destination, List<Node> visitedNodes) {
-            if (this == destination) return true;
-            if (visitedNodes.Contains(this)) return false;
-            visitedNodes.Add((this));
-            return _neighbors.Any(n => n.CanReach(destination, visitedNodes));
+            return champion;
         }
 
         private static List<Node> NoVisitedNodes() => new();

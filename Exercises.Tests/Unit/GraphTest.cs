@@ -8,7 +8,7 @@ using System;
 using Exercises.Graph;
 using Xunit;
 
-namespace Exercises.Tests.unit {
+namespace Exercises.Tests.Unit {
     // Ensures that graph algorithms operate correctly
     public class GraphTest {
         private static readonly Node A = new();
@@ -44,7 +44,7 @@ namespace Exercises.Tests.unit {
             Assert.Equal(1, B.HopCount(A));
             Assert.Equal(1, B.HopCount(F));
             Assert.Equal(2, B.HopCount(D));
-            Assert.Equal(4, C.HopCount(F));
+            Assert.Equal(3, C.HopCount(F));
             Assert.Throws<ArgumentException>(() => A.HopCount(B));
             Assert.Throws<ArgumentException>(() => G.HopCount(B));
             Assert.Throws<ArgumentException>(() => B.HopCount(G));
