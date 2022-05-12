@@ -6,10 +6,12 @@
 
 namespace Exercises.Graph {
     // Understands a connection from one Node to another
-    class Link {
+    internal class Link {
+        private readonly double _cost;
         private readonly Node _target;
 
-        public Link(Node target) {
+        public Link(double cost, Node target) {
+            _cost = cost;
             _target = target;
         }
 
