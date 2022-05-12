@@ -7,7 +7,7 @@
 namespace Exercises.Graph {
     // Understands its neighbors
     public class Node {
-        private const int Unreachable = -1;
+        private const double Unreachable = double.PositiveInfinity;
         private readonly List<Node> _neighbors = new List<Node>();
 
         public Node To(Node neighbor) {
@@ -20,17 +20,16 @@ namespace Exercises.Graph {
         public int HopCount(Node destination) {
             var result = HopCount(destination, NoVisitedNodes());
             if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
-            return result;
+            return (int)result;
         }
 
-        private int HopCount(Node destination, List<Node> visitedNodes) {
+        private double HopCount(Node destination, List<Node> visitedNodes) {
             if (this == destination) return 0;
             if (visitedNodes.Contains(this)) return Unreachable;
             var champion = Unreachable;
             foreach (var n in _neighbors) {
-                var neighborHopCount = n.HopCount(destination, CopyWithThis(visitedNodes));
-                if (neighborHopCount == Unreachable) continue;
-                if (champion == Unreachable || neighborHopCount + 1 < champion) champion = neighborHopCount + 1;
+                var challenger = n.HopCount(destination, CopyWithThis(visitedNodes)) + 1;
+                if (challenger < champion) champion = challenger;
             }
             return champion;
         }
