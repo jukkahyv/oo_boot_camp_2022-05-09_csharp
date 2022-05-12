@@ -13,13 +13,13 @@ namespace Exercises.Graph {
         public bool CanReach(Node destination) => HopCount(destination, NoVisitedNodes) != Unreachable;
 
         public int HopCount(Node destination) {
-            var result = HopCount(destination, NoVisitedNodes);
+            var result = Cost(destination, NoVisitedNodes, Link.FewestHops);
             if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
             return (int)result;
         }
 
         public double Cost(Node destination) {
-            var result = Cost(destination, NoVisitedNodes, Link.LEAST_COST);
+            var result = Cost(destination, NoVisitedNodes, Link.LeastCost);
             if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
