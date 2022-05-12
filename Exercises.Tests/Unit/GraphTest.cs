@@ -4,6 +4,7 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using System;
 using Exercises.Graph;
 using Xunit;
 
@@ -35,6 +36,18 @@ namespace Exercises.Tests.unit {
             Assert.False(A.CanReach(B));
             Assert.False(G.CanReach(B));
             Assert.False(B.CanReach(G));
+        }
+
+        [Fact]
+        public void HopCount() {
+            Assert.Equal(0, A.HopCount(A));
+            Assert.Equal(1, B.HopCount(A));
+            Assert.Equal(1, B.HopCount(F));
+            Assert.Equal(2, B.HopCount(D));
+            Assert.Equal(4, C.HopCount(F));
+            Assert.Throws<ArgumentException>(() => A.HopCount(B));
+            Assert.Throws<ArgumentException>(() => G.HopCount(B));
+            Assert.Throws<ArgumentException>(() => B.HopCount(G));
         }
     }
 }
