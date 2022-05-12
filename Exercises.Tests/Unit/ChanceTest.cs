@@ -76,5 +76,18 @@ namespace Exercises.Tests.UnitTests
             Assert.Throws<ArgumentException>(() => (-0.1).Chance());
             Assert.Throws<ArgumentException>(() => 1.1.Chance());
         }
+
+        [Fact]
+        public void LeastChance()
+        {
+            var chances = new[] { 
+                new Chance(0.5),
+                new Chance(0.1), 
+                new Chance(0.4), 
+                new Chance(0.3) 
+            };
+            Assert.Equal(new Chance(0.1), chances.LeastLikely());
+        }
+
     }
 }
