@@ -4,13 +4,13 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using Exercises.Order;
 using Exercises.Probability;
-using Exercises.rectangle;
 using ExtensionMethods.Probability;
 
 namespace Exercises.Probability {
     // Understands the likelihood of something specific occurring
-    public class Chance : IOurComparable<Chance> {
+    public class Chance : Orderable<Chance> {
         private const double EPSILON = 1e-10;
         private const double CERTAIN_FRACTION = 1.0;
         private readonly double _fraction;
@@ -20,6 +20,8 @@ namespace Exercises.Probability {
                 throw new ArgumentException("Value must be between 0.0 and 1.0, inclusive");
             _fraction = likelihoodAsFraction;
         }
+
+        public bool IsBetterThan(Chance other) => this._fraction < other._fraction;
 
         public override bool Equals(object? o) => this == o || o is Chance other && this.Equals(other);
 
@@ -38,10 +40,6 @@ namespace Exercises.Probability {
         // DeMorgan's Law: https://en.wikipedia.org/wiki/De_Morgan%27s_laws
         public Chance Or(Chance other) => !(!this & !other);
 
-        public bool BetterThan(Chance other) => LessLikely(other);
-
-        public bool LessLikely(Chance other) => this._fraction < other._fraction;
-
         public static Chance operator |(Chance left, Chance right) => left.Or(right);
     }
 }
@@ -50,11 +48,5 @@ namespace ExtensionMethods.Probability {
     public static class ChanceConstructors {
         public static Chance Chance(this double fraction) => new Chance(fraction);
         public static Chance Chance(this int wholeNumber) => new Chance(wholeNumber);
-    }
-
-    public static class ChanceExtensions
-    {
-        public static Chance? LeastLikely(this IEnumerable<Chance> chances) 
-            => chances.Best((challenger, champion) => challenger.BetterThan(champion));
     }
 }
