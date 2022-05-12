@@ -10,24 +10,16 @@ namespace Exercises.Graph {
         private const double Unreachable = double.PositiveInfinity;
         private readonly List<Link> _links = new List<Link>();
 
-        public bool CanReach(Node destination) => HopCount(destination, NoVisitedNodes) != Unreachable;
+        public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
 
-        public int HopCount(Node destination) {
-            var result = Cost(destination, NoVisitedNodes, Link.FewestHops);
-            if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
-            return (int)result;
-        }
+        public int HopCount(Node destination) => (int)Cost(destination, Link.FewestHops);
 
-        public double Cost(Node destination) {
-            var result = Cost(destination, NoVisitedNodes, Link.LeastCost);
+        public double Cost(Node destination) => Cost(destination, Link.LeastCost);
+
+        private double Cost(Node destination, Link.CostStrategy strategy) {
+            var result = Cost(destination, NoVisitedNodes, strategy);
             if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
             return result;
-        }
-
-        internal double HopCount(Node destination, List<Node> visitedNodes) {
-            if (this == destination) return 0;
-            if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
-            return _links.Min((link) => link.HopCount(destination, CopyWithThis(visitedNodes)));
         }
 
         internal double Cost(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
