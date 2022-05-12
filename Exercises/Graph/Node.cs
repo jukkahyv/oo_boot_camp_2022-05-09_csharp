@@ -19,7 +19,7 @@ namespace Exercises.Graph {
         }
 
         public double Cost(Node destination) {
-            var result = Cost(destination, NoVisitedNodes);
+            var result = Cost(destination, NoVisitedNodes, Link.LEAST_COST);
             if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
@@ -30,10 +30,10 @@ namespace Exercises.Graph {
             return _links.Min((link) => link.HopCount(destination, CopyWithThis(visitedNodes)));
         }
 
-        internal double Cost(Node destination, List<Node> visitedNodes) {
+        internal double Cost(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
             if (this == destination) return 0;
             if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
-            return _links.Min((link) => link.Cost(destination, CopyWithThis(visitedNodes)));
+            return _links.Min((link) => link.Cost(destination, CopyWithThis(visitedNodes), strategy));
         }
 
         private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
