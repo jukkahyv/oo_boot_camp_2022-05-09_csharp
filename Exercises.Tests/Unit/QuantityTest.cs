@@ -4,6 +4,7 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+using System;
 using System.Collections.Generic;
 using Exercises.Quantities;
 using ExtensionMethods.Probability.Quantities;
@@ -26,18 +27,63 @@ namespace Exercises.Tests.Unit {
             Assert.Equal(8.Tablespoons(), 0.5.Cups());
             Assert.Equal(768.Teaspoons(), 1.Gallons());
             Assert.NotEqual(8.Tablespoons(), 8.Pints());
+            Assert.Equal(18.Inches(), 0.5.Yards());
+            Assert.Equal(1.Miles(), (12 * 5280).Inches());
+            Assert.Equal(1.5.Leagues(), 36.Furlongs());
+            Assert.Equal(22.Fathoms(), 2.Chains());
         }
 
         [Fact]
         public void Set() {
-            Assert.Single(new HashSet<Quantity> { 8.0.Tablespoons(), 8.0.Tablespoons()});
-            Assert.Contains(8.0.Tablespoons(), new HashSet<Quantity> { 8.0.Tablespoons() });
+            Assert.Single(new HashSet<RatioQuantity> { 8.0.Tablespoons(), 8.0.Tablespoons()});
+            Assert.Contains(8.0.Tablespoons(), new HashSet<RatioQuantity> { 8.0.Tablespoons() });
         }
 
         [Fact]
         public void Hash() {
             Assert.Equal(8.0.Tablespoons().GetHashCode(), 8.0.Tablespoons().GetHashCode());
             Assert.Equal(8.Tablespoons().GetHashCode(), 0.5.Cups().GetHashCode());
+            Assert.Equal(18.Inches().GetHashCode(), 0.5.Yards().GetHashCode());
+            Assert.Equal(10.Celsius().GetHashCode(), 50.Fahrenheit().GetHashCode());
+        }
+        
+        [Fact]
+        public void Arithmetic() {
+            Assert.Equal(0.5.Quarts(), 6.Tablespoons() + 13.Ounces());
+            Assert.Equal(-6.Tablespoons(), -6.Tablespoons());
+            Assert.Equal(-0.5.Pints(), 10.Tablespoons() - 13.Ounces());
+            Assert.Equal(-4.Feet(), 24.Inches() - 2.Yards());
+        }
+
+        [Fact]
+        public void CrossUnitEquality() {
+            Assert.NotEqual(1.Inches(), 1.Teaspoons());
+            Assert.NotEqual(4.Ounces(), 2.Feet());
+        }
+
+        [Fact]
+        public void CrossUnitArithmetic() {
+            Assert.Throws<ArgumentException>(() => 3.Yards() - 4.Tablespoons());
+        }
+
+        [Fact]
+        public void TemperatureEquality() {
+            AssertBidirectionalEquality(0.Celsius(), 32.Fahrenheit());
+            AssertBidirectionalEquality(10.Celsius(), 50.Fahrenheit());
+            AssertBidirectionalEquality(100.Celsius(), 212.Fahrenheit());
+            AssertBidirectionalEquality((-40).Celsius(), (-40).Fahrenheit());
+        }
+
+        [Fact]
+        public void TemperatureArithmetic() {
+            // The following should not even compile
+            // var q = 10.Celsius() + 50.Fahrenheit();
+        }
+
+
+        private void AssertBidirectionalEquality(IntervalQuantity left, IntervalQuantity right) {
+            Assert.Equal(left, right);
+            Assert.Equal(right, left);
         }
     }
 }

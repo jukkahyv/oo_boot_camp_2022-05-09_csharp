@@ -5,11 +5,12 @@
  */
 
 using System;
+using Exercises.Order;
 
 namespace Exercises.rectangle {
     
     // Understands a four-sided polygon with sides at right angles
-    public class Rectangle {
+    public class Rectangle : Orderable<Rectangle> {
         private readonly double _length;
         private readonly double _width;
 
@@ -19,8 +20,12 @@ namespace Exercises.rectangle {
             _width = width;
         }
 
+        public static Rectangle Square(double side) => new Rectangle(side, side);
+
         public double Area() => _length * _width;
 
         public double Perimeter() => 2 * (_length + _width);
+        
+        public bool IsBetterThan(Rectangle other) => this.Area() > other.Area();
     }
 }
