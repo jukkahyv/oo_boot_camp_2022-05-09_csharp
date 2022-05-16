@@ -11,7 +11,7 @@ namespace Exercises.Graph {
     public class Node {
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, LeastCostPath) != None;
+        public bool CanReach(Node destination) => Paths(destination).Count > 0;
 
         public int HopCount(Node destination) => Path(destination, FewestHopsPath).HopCount();
 
@@ -22,25 +22,13 @@ namespace Exercises.Graph {
         public List<Path> Paths(Node destination) => Paths(destination, NoVisitedNodes);
 
         internal List<Path> Paths(Node destination, List<Node> visitedNodes) {
-            if (this == destination) return new List<Path>{ new ActualPath() };
+            if (this == destination) return new List<Path>{ new() };
             if (visitedNodes.Contains(this)) return new List<Path>();
             return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes))).ToList();
         }
 
-        private Path Path(Node destination, Func<Path, double> strategy) {
-            var result = Path(destination, NoVisitedNodes, strategy);
-            if (result == None) throw new ArgumentException("Destination cannot be reached");
-            return result;
-        }
-
-        internal Path Path(Node destination, List<Node> visitedNodes, Func<Path, double> strategy) {
-            if (this == destination) return new ActualPath();
-            if (visitedNodes.Contains(this)) return None;
-            return _links
-                       .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
-                       .MinBy(strategy)
-                   ?? None;
-        }
+        private Path Path(Node destination, Func<Path, double> strategy) => 
+            Paths(destination).MinBy(strategy) ?? throw new ArgumentException("Destination cannot be reached");
 
         private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
 

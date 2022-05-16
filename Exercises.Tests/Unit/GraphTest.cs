@@ -76,14 +76,14 @@ namespace Exercises.Tests.Unit {
 
         [Fact]
         public void AllPathsTo() {
-            Assert.Equal(1, A.Paths(A).Count);
-            Assert.Equal(1, B.Paths(A).Count);
-            Assert.Equal(1, B.Paths(F).Count);
+            Assert.Single(A.Paths(A));
+            Assert.Single(B.Paths(A));
+            Assert.Single(B.Paths(F));
             Assert.Equal(2, C.Paths(D).Count);
             Assert.Equal(3, C.Paths(F).Count);
-            Assert.Equal(0, A.Paths(B).Count);
-            Assert.Equal(0, G.Paths(B).Count);
-            Assert.Equal(0, B.Paths(G).Count);
+            Assert.Empty(A.Paths(B));
+            Assert.Empty(G.Paths(B));
+            Assert.Empty(B.Paths(G));
         }
 
         private void AssertPath(int expectedHopCount, double expectedCost, Node source, Node destination) {
