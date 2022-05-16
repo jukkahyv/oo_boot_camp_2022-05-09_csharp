@@ -33,6 +33,13 @@ namespace Exercises.Graph {
         private static List<Node> NoVisitedNodes => new();
 
         public LinkBuilder Cost(double amount) => new LinkBuilder(amount, _links);
+
+        public Node LinksTo(params Node[] neighbors) {
+            foreach (var neighbor in neighbors) {
+                Cost(1).To(neighbor);
+            }
+            return this;
+        }
         
         public class LinkBuilder {
             private readonly double _cost;
