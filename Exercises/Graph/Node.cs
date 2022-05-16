@@ -34,11 +34,11 @@ namespace Exercises.Graph {
                 ?? None;
         }
 
-        private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
+        private List<Node> CopyWithThis(List<Node> originals) => originals.Append(this).ToList();
 
         private static List<Node> NoVisitedNodes => new();
 
-        public LinkBuilder Cost(double amount) => new LinkBuilder(amount, _links);
+        public LinkBuilder Cost(double amount) => new(amount, _links);
 
         public Node LinksTo(params Node[] neighbors) {
             foreach (var neighbor in neighbors) {
