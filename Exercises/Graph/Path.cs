@@ -7,13 +7,16 @@
 namespace Exercises.Graph {
     // Understands a particular route from one Node to another
     public abstract class Path {
+
         internal static Path None = new NoPath();
         
         internal Path() { }
 
         public abstract int HopCount();
 
-        public abstract double Cost();
+        public double Cost() => Cost(Link.LeastCost);
+
+        internal abstract double Cost(Link.CostStrategy strategy);
 
         internal abstract Path Prepend(Link link);
         
@@ -22,7 +25,7 @@ namespace Exercises.Graph {
 
             public override int HopCount() => _links.Count;
 
-            public override double Cost() => Link.Cost(_links);
+            internal override double Cost(Link.CostStrategy strategy) => Link.Cost(_links, strategy);
 
             internal override Path Prepend(Link link) {
                 _links.Insert(0, link);
@@ -34,7 +37,7 @@ namespace Exercises.Graph {
 
             public override int HopCount() => int.MaxValue;
 
-            public override double Cost() => double.PositiveInfinity;
+            internal override double Cost(Link.CostStrategy strategy) => double.PositiveInfinity;
 
             internal override Path Prepend(Link link) => this;
         }

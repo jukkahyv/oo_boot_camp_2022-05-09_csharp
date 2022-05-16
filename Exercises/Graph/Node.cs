@@ -12,30 +12,27 @@ namespace Exercises.Graph {
         private const double Unreachable = double.PositiveInfinity;
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
+        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, Link.FewestHops) != None;
 
-        public int HopCount(Node destination) => (int)Cost(destination, Link.FewestHops);
+        public int HopCount(Node destination) => Path(destination, Link.FewestHops).HopCount();
 
-        public double Cost(Node destination) => Cost(destination, Link.LeastCost);
+        public double Cost(Node destination) => Path(destination, Link.LeastCost).Cost();
 
-        public Path Path(Node destination) {
-            var result = Path(destination, NoVisitedNodes);
+        public Path Path(Node destination) => Path(destination, Link.LeastCost);
+
+        internal Path Path(Node destination, Link.CostStrategy strategy) {
+            var result = Path(destination, NoVisitedNodes, strategy);
             if (result == None) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
 
-        internal Path Path(Node destination, List<Node> visitedNodes) {
+        internal Path Path(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
             if (this == destination) return new ActualPath();
             if (visitedNodes.Contains(this) || _links.Count == 0) return None;
             return _links
-                .Select(l => l.Path(destination, CopyWithThis(visitedNodes)))
-                .MinBy(p => p.Cost());
-        }
-
-        private double Cost(Node destination, Link.CostStrategy strategy) {
-            var result = Cost(destination, NoVisitedNodes, strategy);
-            if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
-            return result;
+                .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
+                .MinBy(p => p.Cost(strategy))
+                ?? None;
         }
 
         internal double Cost(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
