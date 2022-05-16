@@ -12,14 +12,16 @@ namespace Exercises.Graph {
         private const double Unreachable = double.PositiveInfinity;
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
+        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, LeastCostPath) != None;
 
-        public int HopCount(Node destination) => (int)Cost(destination, Link.FewestHops);
+        public int HopCount(Node destination) => Path(destination, FewestHopsPath).HopCount();
 
-        public double Cost(Node destination) => Cost(destination, Link.LeastCost);
+        public double Cost(Node destination) => Path(destination).Cost();
 
-        public Path Path(Node destination) {
-            var result = Path(destination, NoVisitedNodes, LeastCostPath);
+        public Path Path(Node destination) => Path(destination, LeastCostPath);
+
+        private Path Path(Node destination, Func<Path, double> strategy) {
+            var result = Path(destination, NoVisitedNodes, strategy);
             if (result == None) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
@@ -29,7 +31,7 @@ namespace Exercises.Graph {
             if (visitedNodes.Contains(this)) return None;
             return _links
                        .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
-                       .MinBy(p => p.Cost())
+                       .MinBy(strategy)
                    ?? None;
         }
 
