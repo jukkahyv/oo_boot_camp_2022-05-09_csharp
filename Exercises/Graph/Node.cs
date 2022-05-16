@@ -26,13 +26,10 @@ namespace Exercises.Graph {
 
         internal Path Path(Node destination, List<Node> visitedNodes) {
             if (this == destination) return new ActualPath();
-            if (visitedNodes.Contains(this)) return None;
-            var champion = None;
-            foreach (var link in _links) {
-                var challenger = link.Path(destination, CopyWithThis(visitedNodes));
-                if (challenger.Cost() < champion.Cost()) champion = challenger;
-            }
-            return champion;
+            if (visitedNodes.Contains(this) || _links.Count == 0) return None;
+            return _links
+                .Select(l => l.Path(destination, CopyWithThis(visitedNodes)))
+                .MinBy(p => p.Cost());
         }
 
         private double Cost(Node destination, Link.CostStrategy strategy) {
