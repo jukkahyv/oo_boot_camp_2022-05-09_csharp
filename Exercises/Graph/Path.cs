@@ -7,6 +7,7 @@
 namespace Exercises.Graph {
     // Understands a particular route from one Node to another
     public abstract class Path {
+        internal static Path None = new NoPath();
         
         internal Path() { }
 
@@ -27,6 +28,15 @@ namespace Exercises.Graph {
                 _links.Insert(0, link);
                 return this;
             }
+        }
+        
+        private class NoPath : Path {
+
+            public override int HopCount() => int.MaxValue;
+
+            public override double Cost() => double.PositiveInfinity;
+
+            internal override Path Prepend(Link link) => this;
         }
     }
 }
