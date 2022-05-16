@@ -9,7 +9,6 @@ using static Exercises.Graph.Path;
 namespace Exercises.Graph {
     // Understands its neighbors
     public class Node {
-        private const double Unreachable = double.PositiveInfinity;
         private readonly List<Link> _links = new();
 
         public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, Link.FewestHops) != None;
@@ -33,12 +32,6 @@ namespace Exercises.Graph {
                 .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
                 .MinBy(p => p.Cost(strategy))
                 ?? None;
-        }
-
-        internal double Cost(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
-            if (this == destination) return 0;
-            if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
-            return _links.Min((link) => link.Cost(destination, CopyWithThis(visitedNodes), strategy));
         }
 
         private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
