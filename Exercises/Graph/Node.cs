@@ -34,6 +34,16 @@ namespace Exercises.Graph {
                 ?? None;
         }
 
+        public List<Path> Paths(Node destination)
+            => Paths(destination, NoVisitedNodes).ToList();
+
+        internal IEnumerable<Path> Paths(Node destination, List<Node> visitedNodes)
+        {
+            if (this == destination) return new List<Path>{ new ActualPath() };
+            if (visitedNodes.Contains(this) || _links.Count == 0) return new List<Path>();
+            return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes)));
+        }
+
         private List<Node> CopyWithThis(List<Node> originals) => originals.Append(this).ToList();
 
         private static List<Node> NoVisitedNodes => new();

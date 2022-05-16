@@ -79,5 +79,14 @@ namespace Exercises.Tests.Unit {
             Assert.Equal(expectedHopCount, path.HopCount());
             Assert.Equal(expectedCost, path.Cost());
         }
+
+        [Fact]
+        public void PathsTo()
+        {
+            Assert.Single(B.Paths(B));
+            Assert.Equal(3, B.Paths(E).Count);
+            Assert.Equal(3, C.Paths(F).Count);
+            Assert.Empty(B.Paths(G));
+        }
     }
 }
