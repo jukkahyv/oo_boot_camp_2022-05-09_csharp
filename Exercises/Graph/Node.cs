@@ -11,26 +11,26 @@ namespace Exercises.Graph {
     public class Node {
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, Link.FewestHops) != None;
+        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, FewestHops) != None;
 
-        public int HopCount(Node destination) => Path(destination, Link.FewestHops).HopCount();
+        public int HopCount(Node destination) => Path(destination, FewestHops).HopCount();
 
-        public double Cost(Node destination) => Path(destination, Link.LeastCost).Cost();
+        public double Cost(Node destination) => Path(destination, LeastCost).Cost();
 
-        public Path Path(Node destination) => Path(destination, Link.LeastCost);
+        public Path Path(Node destination) => Path(destination, LeastCost);
 
-        internal Path Path(Node destination, Link.CostStrategy strategy) {
+        internal Path Path(Node destination, PathCostStrategy strategy) {
             var result = Path(destination, NoVisitedNodes, strategy);
             if (result == None) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
 
-        internal Path Path(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
+        internal Path Path(Node destination, List<Node> visitedNodes, PathCostStrategy strategy) {
             if (this == destination) return new ActualPath();
             if (visitedNodes.Contains(this) || _links.Count == 0) return None;
             return _links
                 .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
-                .MinBy(p => p.Cost(strategy))
+                .MinBy(strategy)
                 ?? None;
         }
 

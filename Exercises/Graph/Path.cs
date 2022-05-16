@@ -4,9 +4,13 @@
  * @author Fred George  fredgeorge@acm.org
  */
 
+global using PathCostStrategy = System.Func<Exercises.Graph.Path, double>;
+
 namespace Exercises.Graph {
     // Understands a particular route from one Node to another
     public abstract class Path {
+        internal static readonly PathCostStrategy LeastCost = path => path.Cost();
+        internal static readonly PathCostStrategy FewestHops = path => path.HopCount();
 
         internal static Path None = new NoPath();
         
@@ -14,9 +18,7 @@ namespace Exercises.Graph {
 
         public abstract int HopCount();
 
-        public double Cost() => Cost(Link.LeastCost);
-
-        internal abstract double Cost(Link.CostStrategy strategy);
+        public abstract double Cost();
 
         internal abstract Path Prepend(Link link);
         
@@ -25,7 +27,7 @@ namespace Exercises.Graph {
 
             public override int HopCount() => _links.Count;
 
-            internal override double Cost(Link.CostStrategy strategy) => Link.Cost(_links, strategy);
+            public override double Cost() => Link.Cost(_links);
 
             internal override Path Prepend(Link link) {
                 _links.Insert(0, link);
@@ -37,7 +39,7 @@ namespace Exercises.Graph {
 
             public override int HopCount() => int.MaxValue;
 
-            internal override double Cost(Link.CostStrategy strategy) => double.PositiveInfinity;
+            public override double Cost() => double.PositiveInfinity;
 
             internal override Path Prepend(Link link) => this;
         }
