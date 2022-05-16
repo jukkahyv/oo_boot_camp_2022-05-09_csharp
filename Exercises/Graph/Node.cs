@@ -25,9 +25,8 @@ namespace Exercises.Graph {
             return result;
         }
 
-        internal Path Path(Node destination, List<Node> visitedNodes, PathCostStrategy strategy) {
-            return Paths(destination, visitedNodes).MinBy(strategy) ?? None;
-        }
+        internal Path Path(Node destination, List<Node> visitedNodes, PathCostStrategy strategy) 
+            => Paths(destination, visitedNodes).MinBy(strategy) ?? None;
 
         public List<Path> Paths(Node destination)
             => Paths(destination, NoVisitedNodes).ToList();
