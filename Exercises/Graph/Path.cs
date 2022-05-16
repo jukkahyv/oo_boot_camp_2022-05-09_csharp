@@ -7,14 +7,14 @@
 namespace Exercises.Graph {
     // Understands a particular route from one Node to another
     public class Path {
-        private List<Link> _links = new List<Link>();
+        private readonly List<Link> _links = new List<Link>();
 
         public int HopCount() => _links.Count;
 
         public double Cost() => Link.Cost(_links);
 
-        internal Path prepend(Link link) {
-            _links.Add(link);
+        internal Path Prepend(Link link) {
+            _links.Insert(0, link);
             return this;
         }
     }

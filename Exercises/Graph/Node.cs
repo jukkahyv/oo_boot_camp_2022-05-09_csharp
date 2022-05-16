@@ -8,7 +8,7 @@ namespace Exercises.Graph {
     // Understands its neighbors
     public class Node {
         private const double Unreachable = double.PositiveInfinity;
-        private readonly List<Link> _links = new List<Link>();
+        private readonly List<Link> _links = new();
 
         public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
 
@@ -16,11 +16,8 @@ namespace Exercises.Graph {
 
         public double Cost(Node destination) => Cost(destination, Link.LeastCost);
 
-        public Path Path(Node destination) {
-            var result = Path(destination, NoVisitedNodes);
-            if (result == null) throw new ArgumentException("Destination cannot be reached");
-            return result!;
-        }
+        public Path Path(Node destination) => Path(destination, NoVisitedNodes)
+                                              ?? throw new ArgumentException("Destination cannot be reached");
 
         internal Path? Path(Node destination, List<Node> visitedNodes) {
             if (this == destination) return new Path();
