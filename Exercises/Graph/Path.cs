@@ -8,6 +8,7 @@ namespace Exercises.Graph {
     // Understands a particular route from one Node to another
     public abstract class Path {
         internal static Path None = new NoPath();
+        internal static Func<Path, double> LeastCostPath = (p) => p.Cost();
         
         internal Path() { }
 

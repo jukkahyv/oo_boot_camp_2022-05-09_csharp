@@ -24,7 +24,7 @@ namespace Exercises.Graph {
         internal double Cost(Node destination, List<Node> visitedNodes, CostStrategy strategy) => 
             _target.Cost(destination, visitedNodes, strategy) + strategy(_cost);
 
-        internal Path Path(Node destination, List<Node> visitedNodes) => 
-            _target.Path(destination, visitedNodes).Prepend(this);
+        internal Path Path(Node destination, List<Node> visitedNodes, Func<Path, double> strategy) => 
+            _target.Path(destination, visitedNodes, strategy).Prepend(this);
     }
 }

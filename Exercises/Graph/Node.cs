@@ -19,17 +19,18 @@ namespace Exercises.Graph {
         public double Cost(Node destination) => Cost(destination, Link.LeastCost);
 
         public Path Path(Node destination) {
-            var result = Path(destination, NoVisitedNodes);
+            var result = Path(destination, NoVisitedNodes, LeastCostPath);
             if (result == None) throw new ArgumentException("Destination cannot be reached");
             return result;
         }
 
-        internal Path Path(Node destination, List<Node> visitedNodes) {
+        internal Path Path(Node destination, List<Node> visitedNodes, Func<Path, double> strategy) {
             if (this == destination) return new ActualPath();
-            if (visitedNodes.Contains(this) || _links.Count == 0) return None;
+            if (visitedNodes.Contains(this)) return None;
             return _links
-                .Select(l => l.Path(destination, CopyWithThis(visitedNodes)))
-                .MinBy(p => p.Cost());
+                       .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
+                       .MinBy(p => p.Cost())
+                   ?? None;
         }
 
         private double Cost(Node destination, Link.CostStrategy strategy) {
@@ -49,7 +50,7 @@ namespace Exercises.Graph {
         private static List<Node> NoVisitedNodes => new();
 
         public LinkBuilder Cost(double amount) => new LinkBuilder(amount, _links);
-        
+
         public class LinkBuilder {
             private readonly double _cost;
             private readonly List<Link> _links;
@@ -63,8 +64,6 @@ namespace Exercises.Graph {
                 _links.Add(new Link(_cost, neighbor));
                 return neighbor;
             }
-
         }
-
     }
 }
