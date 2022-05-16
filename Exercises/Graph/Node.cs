@@ -8,13 +8,28 @@ namespace Exercises.Graph {
     // Understands its neighbors
     public class Node {
         private const double Unreachable = double.PositiveInfinity;
-        private readonly List<Link> _links = new List<Link>();
+        private readonly List<Link> _links = new();
 
         public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
 
         public int HopCount(Node destination) => (int)Cost(destination, Link.FewestHops);
 
         public double Cost(Node destination) => Cost(destination, Link.LeastCost);
+
+        public Path Path(Node destination) => Path(destination, NoVisitedNodes)
+                                              ?? throw new ArgumentException("Destination cannot be reached");
+
+        internal Path? Path(Node destination, List<Node> visitedNodes) {
+            if (this == destination) return new Path();
+            if (visitedNodes.Contains(this)) return null;
+            Path? champion = null;
+            foreach (var link in _links) {
+                var challenger = link.Path(destination, CopyWithThis(visitedNodes));
+                if (challenger == null) continue;
+                if (champion == null || challenger.Cost() < champion.Cost()) champion = challenger;
+            }
+            return champion;
+        }
 
         private double Cost(Node destination, Link.CostStrategy strategy) {
             var result = Cost(destination, NoVisitedNodes, strategy);

@@ -9,7 +9,9 @@ namespace Exercises.Graph {
     internal class Link {        
         internal delegate double CostStrategy(double cost);
         internal static readonly CostStrategy LeastCost = (cost) => cost;
-        internal static readonly CostStrategy FewestHops = (cost) => 1.0;
+        internal static readonly CostStrategy FewestHops = (_) => 1.0;
+
+        internal static double Cost(List<Link> links) => links.Sum(l => l._cost);
 
         private readonly double _cost;
         private readonly Node _target;
@@ -21,5 +23,8 @@ namespace Exercises.Graph {
 
         internal double Cost(Node destination, List<Node> visitedNodes, CostStrategy strategy) => 
             _target.Cost(destination, visitedNodes, strategy) + strategy(_cost);
+
+        internal Path? Path(Node destination, List<Node> visitedNodes) => 
+            _target.Path(destination, visitedNodes)?.Prepend(this);
     }
 }
