@@ -19,6 +19,14 @@ namespace Exercises.Graph {
 
         public Path Path(Node destination) => Path(destination, LeastCostPath);
 
+        public List<Path> Paths(Node destination) => Paths(destination, NoVisitedNodes);
+
+        internal List<Path> Paths(Node destination, List<Node> visitedNodes) {
+            if (this == destination) return new List<Path>{ new ActualPath() };
+            if (visitedNodes.Contains(this)) return new List<Path>();
+            return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes))).ToList();
+        }
+
         private Path Path(Node destination, Func<Path, double> strategy) {
             var result = Path(destination, NoVisitedNodes, strategy);
             if (result == None) throw new ArgumentException("Destination cannot be reached");

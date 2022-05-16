@@ -19,5 +19,8 @@ namespace Exercises.Graph {
 
         internal Path Path(Node destination, List<Node> visitedNodes, Func<Path, double> strategy) => 
             _target.Path(destination, visitedNodes, strategy).Prepend(this);
+
+        internal List<Path> Paths(Node destination, List<Node> visitedNodes) => 
+            _target.Paths(destination, visitedNodes).Select(p =>p.Prepend(this)).ToList();
     }
 }

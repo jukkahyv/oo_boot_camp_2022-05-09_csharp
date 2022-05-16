@@ -74,6 +74,18 @@ namespace Exercises.Tests.Unit {
             Assert.Throws<ArgumentException>(() => B.Path(G));
         }
 
+        [Fact]
+        public void AllPathsTo() {
+            Assert.Equal(1, A.Paths(A).Count);
+            Assert.Equal(1, B.Paths(A).Count);
+            Assert.Equal(1, B.Paths(F).Count);
+            Assert.Equal(2, C.Paths(D).Count);
+            Assert.Equal(3, C.Paths(F).Count);
+            Assert.Equal(0, A.Paths(B).Count);
+            Assert.Equal(0, G.Paths(B).Count);
+            Assert.Equal(0, B.Paths(G).Count);
+        }
+
         private void AssertPath(int expectedHopCount, double expectedCost, Node source, Node destination) {
             var path = source.Path(destination);
             Assert.Equal(expectedHopCount, path.HopCount());
