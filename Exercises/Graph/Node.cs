@@ -11,7 +11,7 @@ namespace Exercises.Graph {
     public class Node {
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Path(destination, NoVisitedNodes, FewestHops) != None;
+        public bool CanReach(Node destination) => Paths(destination).Any();
 
         public int HopCount(Node destination) => Path(destination, FewestHops).HopCount();
 
@@ -19,22 +19,15 @@ namespace Exercises.Graph {
 
         public Path Path(Node destination) => Path(destination, LeastCost);
 
-        internal Path Path(Node destination, PathCostStrategy strategy) {
-            var result = Path(destination, NoVisitedNodes, strategy);
-            if (result == None) throw new ArgumentException("Destination cannot be reached");
-            return result;
-        }
+        public List<Path> Paths(Node destination) => Paths(destination, NoVisitedNodes).ToList();
 
-        internal Path Path(Node destination, List<Node> visitedNodes, PathCostStrategy strategy) 
-            => Paths(destination, visitedNodes).MinBy(strategy) ?? None;
-
-        public List<Path> Paths(Node destination)
-            => Paths(destination, NoVisitedNodes).ToList();
+        internal Path Path(Node destination, PathCostStrategy strategy) 
+            => Paths(destination).MinBy(strategy) ?? throw new ArgumentException("No path found");
 
         internal IEnumerable<Path> Paths(Node destination, List<Node> visitedNodes)
         {
-            if (this == destination) return new List<Path>{ new ActualPath() };
-            if (visitedNodes.Contains(this) || _links.Count == 0) return new List<Path>();
+            if (this == destination) return new List<Path> { new Path() };
+            if (visitedNodes.Contains(this)) return new List<Path>();
             return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes)));
         }
 
@@ -43,13 +36,6 @@ namespace Exercises.Graph {
         private static List<Node> NoVisitedNodes => new();
 
         public LinkBuilder Cost(double amount) => new(amount, _links);
-
-        public Node LinksTo(params Node[] neighbors) {
-            foreach (var neighbor in neighbors) {
-                Cost(1).To(neighbor);
-            }
-            return this;
-        }
         
         public class LinkBuilder {
             private readonly double _cost;
