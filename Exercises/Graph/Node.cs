@@ -26,12 +26,7 @@ namespace Exercises.Graph {
         }
 
         internal Path Path(Node destination, List<Node> visitedNodes, PathCostStrategy strategy) {
-            if (this == destination) return new ActualPath();
-            if (visitedNodes.Contains(this) || _links.Count == 0) return None;
-            return _links
-                .Select(l => l.Path(destination, CopyWithThis(visitedNodes), strategy))
-                .MinBy(strategy)
-                ?? None;
+            return Paths(destination, visitedNodes).MinBy(strategy) ?? None;
         }
 
         public List<Path> Paths(Node destination)
