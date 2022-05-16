@@ -20,7 +20,7 @@ namespace Exercises.Graph {
                                               ?? throw new ArgumentException("Destination cannot be reached");
 
         internal Path? Path(Node destination, List<Node> visitedNodes) {
-            if (this == destination) return new Path();
+            if (this == destination) return new Path.ActualPath();
             if (visitedNodes.Contains(this)) return null;
             Path? champion = null;
             foreach (var link in _links) {
