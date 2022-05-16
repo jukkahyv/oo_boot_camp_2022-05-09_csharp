@@ -1,40 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+/*
+ * Copyright (c) 2022 by Fred George
+ * May be used freely except for training; license required for training.
+ * @author Fred George  fredgeorge@acm.org
+ */
 
-namespace Exercises.Graph
-{
-    public class Node
-    {
+namespace Exercises.Graph {
+    // Understands its neighbors
+    public class Node {
+        private const double Unreachable = double.PositiveInfinity;
+        private readonly List<Link> _links = new List<Link>();
 
+        public bool CanReach(Node destination) => Cost(destination, NoVisitedNodes, Link.FewestHops) != Unreachable;
 
+        public int HopCount(Node destination) => (int)Cost(destination, Link.FewestHops);
 
-        private Node[] _links = new Node[0];
-        private readonly string _name;
+        public double Cost(Node destination) => Cost(destination, Link.LeastCost);
 
-        public Node(string name)
-        {
-            _name = name;
+        private double Cost(Node destination, Link.CostStrategy strategy) {
+            var result = Cost(destination, NoVisitedNodes, strategy);
+            if (result == Unreachable) throw new ArgumentException("Destination cannot be reached");
+            return result;
         }
 
-        public bool CanReach(Node target)
-        {
-            return _links.Contains(target) 
-                || _links.Any(link => link.CanReach(target));
+        internal double Cost(Node destination, List<Node> visitedNodes, Link.CostStrategy strategy) {
+            if (this == destination) return 0;
+            if (visitedNodes.Contains(this) || _links.Count == 0) return Unreachable;
+            return _links.Min((link) => link.Cost(destination, CopyWithThis(visitedNodes), strategy));
         }
 
-        public Node LinksTo(params Node[] targets)
-        {
-            _links = _links.Concat(targets).ToArray();
-            return this;
-        }
-    }
+        private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
 
-    public static class NodeConstructors
-    {
-        public static Node Node(this string name)
-            => new Node(name);
+        private static List<Node> NoVisitedNodes => new();
+
+        public LinkBuilder Cost(double amount) => new LinkBuilder(amount, _links);
+        
+        public class LinkBuilder {
+            private readonly double _cost;
+            private readonly List<Link> _links;
+
+            internal LinkBuilder(double cost, List<Link> links) {
+                _cost = cost;
+                _links = links;
+            }
+
+            public Node To(Node neighbor) {
+                _links.Add(new Link(_cost, neighbor));
+                return neighbor;
+            }
+
+        }
+
     }
 }

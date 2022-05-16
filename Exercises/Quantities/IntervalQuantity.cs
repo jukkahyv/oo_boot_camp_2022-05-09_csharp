@@ -9,25 +9,25 @@ using Exercises.Order;
 namespace Exercises.Quantities {
     // Understands a specific measurement
     public class IntervalQuantity : Orderable<IntervalQuantity> {
-        protected readonly double _amount;
-        protected readonly Unit _unit;
+        protected readonly double Amount;
+        protected readonly Unit Unit;
 
         internal IntervalQuantity(double amount, Unit unit) {
-            _amount = amount;
-            _unit = unit;
+            Amount = amount;
+            Unit = unit;
         }
 
-        public bool IsBetterThan(IntervalQuantity other) => this._amount > ConvertedAmount(other);
+        public bool IsBetterThan(IntervalQuantity other) => this.Amount > ConvertedAmount(other);
 
         public override bool Equals(object? o) =>
             this == o || o is IntervalQuantity other && this.Equals(other);
 
-        private bool Equals(IntervalQuantity other) => this.IsCompatible(other) && this._amount == ConvertedAmount(other);
+        private bool Equals(IntervalQuantity other) => this.IsCompatible(other) && this.Amount == ConvertedAmount(other);
 
-        private bool IsCompatible(IntervalQuantity other) => this._unit.IsCompatible(other._unit);
+        private bool IsCompatible(IntervalQuantity other) => this.Unit.IsCompatible(other.Unit);
 
-        protected double ConvertedAmount(IntervalQuantity other) => this._unit.ConvertedAmount(other._amount, other._unit);
+        protected double ConvertedAmount(IntervalQuantity other) => this.Unit.ConvertedAmount(other.Amount, other.Unit);
 
-        public override int GetHashCode() => _unit.HashCode(_amount);
+        public override int GetHashCode() => Unit.HashCode(Amount);
     }
 }
