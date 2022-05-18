@@ -11,32 +11,31 @@ namespace Exercises.Graph {
     public class Node {
         private readonly List<Link> _links = new();
 
-        public bool CanReach(Node destination) => Paths(destination).Any();
+        public bool CanReach(Node destination) => Paths(destination).Count > 0;
 
-        public int HopCount(Node destination) => Path(destination, FewestHops).HopCount();
+        public int HopCount(Node destination) => Path(destination, FewestHopsPath).HopCount();
 
-        public double Cost(Node destination) => Path(destination, LeastCost).Cost();
+        public double Cost(Node destination) => Path(destination).Cost();
 
-        public Path Path(Node destination) => Path(destination, LeastCost);
+        public Path Path(Node destination) => Path(destination, LeastCostPath);
 
-        public List<Path> Paths(Node destination) => Paths(destination, NoVisitedNodes).ToList();
+        public List<Path> Paths(Node destination) => Paths(destination, NoVisitedNodes);
 
-        internal Path Path(Node destination, PathCostStrategy strategy) 
-            => Paths(destination).MinBy(strategy) ?? throw new ArgumentException("No path found");
-
-        internal IEnumerable<Path> Paths(Node destination, List<Node> visitedNodes)
-        {
-            if (this == destination) return new List<Path> { new Path() };
+        internal List<Path> Paths(Node destination, List<Node> visitedNodes) {
+            if (this == destination) return new List<Path>{ new() };
             if (visitedNodes.Contains(this)) return new List<Path>();
-            return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes)));
+            return _links.SelectMany(l => l.Paths(destination, CopyWithThis(visitedNodes))).ToList();
         }
 
-        private List<Node> CopyWithThis(List<Node> originals) => originals.Append(this).ToList();
+        private Path Path(Node destination, Func<Path, double> strategy) => 
+            Paths(destination).MinBy(strategy) ?? throw new ArgumentException("Destination cannot be reached");
+
+        private List<Node> CopyWithThis(List<Node> originals) => new List<Node>(originals) { this };
 
         private static List<Node> NoVisitedNodes => new();
 
-        public LinkBuilder Cost(double amount) => new(amount, _links);
-        
+        public LinkBuilder Cost(double amount) => new LinkBuilder(amount, _links);
+
         public class LinkBuilder {
             private readonly double _cost;
             private readonly List<Link> _links;
@@ -50,8 +49,6 @@ namespace Exercises.Graph {
                 _links.Add(new Link(_cost, neighbor));
                 return neighbor;
             }
-
         }
-
     }
 }
